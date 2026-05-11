@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Aperture,
@@ -41,9 +40,7 @@ import uSaree from "@/assets/work-saree-portrait.jpg";
 import uWeddingCouple from "@/assets/work-wedding-couple.jpg";
 import uCoupleCar from "@/assets/work-couple-car.png";
 
-export const Route = createFileRoute("/")({
-  component: Index,
-});
+export default Index;
 
 type Category = "weddings" | "portraits" | "events";
 type Photo = { src: string; title: string; location?: string; tall?: boolean };
