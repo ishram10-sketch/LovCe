@@ -1093,6 +1093,8 @@ function Quote() {
 
 function Packages() {
   const { data: packages = [] } = useQuery(publicPackagesQuery());
+  const { data: settings } = useSiteSettings();
+  const siteName = settings?.site_name ?? "Dopamine";
   if (packages.length === 0) return null;
 
   return (
@@ -1145,7 +1147,9 @@ function Packages() {
                 </ul>
               )}
               <a
-                href="#contact"
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hi ${siteName}! I'm interested in booking the *${pkg.name}* package (${pkg.price}). Could you please let me know the available dates and how to proceed? Thank you!`)}`}
+                target="_blank"
+                rel="noreferrer"
                 className="mt-8 inline-flex items-center justify-center gap-2 bg-gold px-6 py-3 text-[11px] uppercase tracking-[0.3em] text-[var(--espresso)] transition-transform hover:-translate-y-0.5"
               >
                 Book this package
