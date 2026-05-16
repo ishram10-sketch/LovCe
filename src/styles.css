@@ -231,6 +231,14 @@
     transform: scaleX(1);
     transform-origin: left;
   }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Admin panel light theme — overrides shadcn CSS variables for all admin routes */

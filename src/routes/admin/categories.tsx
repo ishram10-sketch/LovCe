@@ -134,8 +134,8 @@ function AdminCategories() {
   });
 
   return (
-    <div className="p-8">
-      <div className="mb-8 flex items-start justify-between gap-4">
+    <div className="p-4 md:p-8">
+      <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-[#1a1008]">Work Categories</h1>
           <p className="mt-1 text-sm text-[#6b5a4a]">

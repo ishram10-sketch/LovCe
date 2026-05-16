@@ -22,7 +22,7 @@ function AdminPhotos() {
 
   if (catsLoading) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <p className="text-sm text-[#8B6B3D]">Loading…</p>
       </div>
     );
@@ -30,7 +30,7 @@ function AdminPhotos() {
 
   if (categories.length === 0) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <h1 className="text-2xl font-semibold text-[#1a1008]">Photos</h1>
         <div className="mt-6 rounded-xl border border-dashed border-[rgba(26,16,8,0.15)] py-16 text-center">
           <p className="text-sm text-[#8B6B3D]">No categories yet.</p>
@@ -46,7 +46,7 @@ function AdminPhotos() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-[#1a1008]">Photos</h1>
         <p className="mt-1 text-sm text-[#6b5a4a]">

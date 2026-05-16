@@ -1272,7 +1272,7 @@ function Contact() {
               <p className="text-[10px] uppercase tracking-[0.32em] text-cream/45">Email</p>
               <a
                 href={`mailto:${settings?.contact_email ?? "hello@dopamine.lk"}`}
-                className="mt-3 inline-block font-display text-2xl text-cream hover:text-gold"
+                className="mt-3 block break-all text-sm font-medium text-cream hover:text-gold"
               >
                 {settings?.contact_email ?? "hello@dopamine.lk"}
               </a>
@@ -1282,7 +1282,7 @@ function Contact() {
                 <p className="text-[10px] uppercase tracking-[0.32em] text-cream/45">Phone</p>
                 <a
                   href={`tel:${settings.contact_phone}`}
-                  className="mt-3 inline-block font-display text-2xl text-cream hover:text-gold"
+                  className="mt-3 block break-all text-sm font-medium text-cream hover:text-gold"
                 >
                   {settings.contact_phone}
                 </a>
@@ -1290,7 +1290,7 @@ function Contact() {
             ) : (
               <div className="glass-panel p-5">
                 <p className="text-[10px] uppercase tracking-[0.32em] text-cream/45">Based in</p>
-                <p className="mt-3 font-display text-2xl text-cream">
+                <p className="mt-3 text-sm font-medium text-cream">
                   {settings?.contact_location ?? "Colombo, Sri Lanka"}
                 </p>
               </div>
@@ -1299,7 +1299,7 @@ function Contact() {
           {settings?.contact_phone && (
             <div className="mt-5 glass-panel p-5">
               <p className="text-[10px] uppercase tracking-[0.32em] text-cream/45">Based in</p>
-              <p className="mt-3 font-display text-2xl text-cream">
+              <p className="mt-3 text-sm font-medium text-cream">
                 {settings?.contact_location ?? "Colombo, Sri Lanka"}
               </p>
             </div>

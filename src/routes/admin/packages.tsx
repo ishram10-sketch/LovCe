@@ -57,7 +57,7 @@ function AdminPackages() {
   });
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 md:p-8 max-w-3xl">
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-[#1a1008]">Packages</h1>

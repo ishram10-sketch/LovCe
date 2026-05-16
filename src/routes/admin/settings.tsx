@@ -195,14 +195,14 @@ function AdminSettings() {
 
   if (isLoading) {
     return (
-      <div className="p-8">
+      <div className="p-4 md:p-8">
         <div className="h-8 w-48 animate-pulse rounded bg-[#e8e4de]" />
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-4 md:p-8 max-w-2xl">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-[#1a1008]">Site Settings</h1>
         <p className="mt-1 text-sm text-[#6b5a4a]">

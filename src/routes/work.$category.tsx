@@ -53,7 +53,7 @@ function Lightbox({
       >
         <ChevronRight className="h-5 w-5" />
       </button>
-      <div className="flex flex-col items-center gap-4 px-16" onClick={(e) => e.stopPropagation()}>
+      <div className="flex flex-col items-center gap-4 px-4 md:px-16" onClick={(e) => e.stopPropagation()}>
         <img
           src={photo.url}
           alt={photo.title}
@@ -112,7 +112,7 @@ function WorkGallery() {
           <p className="mb-3 flex items-center gap-3 text-[10px] uppercase tracking-[0.4em] text-gold">
             <span className="h-px w-10 bg-gold" /> Portfolio
           </p>
-          <h1 className="font-display text-5xl leading-[0.94] text-cream md:text-7xl lg:text-8xl">
+          <h1 className="font-display text-4xl leading-[0.94] text-cream md:text-6xl lg:text-8xl">
             {category?.label ?? slug}
           </h1>
           {category?.tag && (
@@ -129,14 +129,14 @@ function WorkGallery() {
 
       {/* Category tabs */}
       {categories.length > 1 && (
-        <div className="border-b border-white/8 px-6 pb-6">
-          <div className="mx-auto flex max-w-7xl flex-wrap gap-2">
+        <div className="border-b border-white/8 px-6 pb-4">
+          <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto pb-2 scrollbar-none">
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
                 to="/work/$category"
                 params={{ category: cat.slug }}
-                className={`rounded-full border px-4 py-2 text-[11px] uppercase tracking-[0.25em] transition-all ${
+                className={`shrink-0 rounded-full border px-4 py-2 text-[11px] uppercase tracking-[0.25em] transition-all ${
                   cat.slug === slug
                     ? "border-gold bg-gold text-[var(--espresso)]"
                     : "border-white/12 text-cream/60 hover:border-gold/40 hover:text-gold"
@@ -158,7 +158,7 @@ function WorkGallery() {
               <p className="font-display text-2xl text-cream/40">No photos yet</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4" style={{ gridAutoRows: "clamp(160px, 22vw, 300px)" }}>
+            <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-4" style={{ gridAutoRows: "clamp(130px, 28vw, 300px)" }}>
               {photos.map((photo, index) => (
                 <button
                   key={photo.id}
