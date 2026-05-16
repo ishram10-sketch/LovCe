@@ -8,5 +8,8 @@
         "distDir": "dist"
       }
     }
+  ],
+  "rewrites": [
+    { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ]
 }
