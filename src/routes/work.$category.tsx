@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Aperture, ArrowLeft, ArrowUpRight, ChevronLeft, ChevronRight, MapPin, X } from "lucide-react";
 import { categoriesQuery, photosQuery } from "@/lib/queries";
 import type { Photo } from "@/lib/types";
+import { getBrand } from "@/lib/brand";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 
 export const Route = createFileRoute("/work/$category")({ component: WorkGallery });
@@ -123,6 +124,7 @@ function WorkGallery() {
   const isAll = slug === "all";
   const category = isAll ? null : categories.find((c) => c.slug === slug);
   const photos = isAll ? allPhotos : allPhotos.filter((p) => p.category === slug);
+  const brand = getBrand(settings?.site_name);
 
   // Shuffle once on load / when photo count changes
   const shuffledPhotos = useMemo(() => {
@@ -150,7 +152,9 @@ function WorkGallery() {
         className="sticky top-0 z-40 flex items-center justify-between border-b border-white/[0.07] bg-[rgba(14,8,4,0.92)] px-6 py-4 backdrop-blur-xl"
       >
         <Link to="/" className="group flex flex-col items-start leading-none">
-          <span className="font-display text-lg text-cream transition-colors group-hover:text-gold">Lov&#39;Ceylon</span>
+          <span className="font-display text-lg text-cream transition-colors group-hover:text-gold">
+            {brand.before}<span className="text-gold">&#39;</span>{brand.after}
+          </span>
           <span className="mt-0.5 text-[7px] uppercase tracking-[0.5em] text-gold/60">Photography</span>
         </Link>
         <Link

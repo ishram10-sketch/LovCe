@@ -6,6 +6,7 @@ import {
   motion,
   useInView,
   useScroll,
+  useSpring,
   useTransform,
   type Variants,
 } from "framer-motion";
@@ -44,6 +45,7 @@ import {
   submitContactForm,
 } from "@/lib/queries";
 import type { Photo, WorkCategory } from "@/lib/types";
+import { getBrand } from "@/lib/brand";
 import { useSiteSettings } from "@/hooks/use-site-settings";
 import { useSeoMeta } from "@/hooks/use-seo-meta";
 import { useThemeApplicator } from "@/hooks/use-theme-applicator";
@@ -150,6 +152,19 @@ function StatItem({ num, suffix, label }: { num: number; suffix: string; label: 
       </span>
       <span className="mt-3 text-[9px] uppercase tracking-[0.5em] text-cream/45">{label}</span>
     </div>
+  );
+}
+
+// ─── Scroll progress bar ──────────────────────────────────────────────────────
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  return (
+    <motion.div
+      style={{ scaleX }}
+      className="fixed inset-x-0 top-0 z-[120] h-[2px] origin-left bg-gradient-to-r from-gold/40 via-gold to-[#f2e0a0] shadow-[0_0_12px_rgba(201,169,110,0.6)]"
+      aria-hidden
+    />
   );
 }
 
@@ -341,11 +356,7 @@ function Nav() {
   const whatsapp = settings?.contact_phone?.replace(/\D/g, "") ?? "94777807619";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const siteName = settings?.site_name ?? "Lov'Ceylon";
-  const apoIdx = siteName.indexOf("'");
-  const nameBefore = apoIdx >= 0 ? siteName.slice(0, apoIdx) : siteName;
-  const fullAfter = apoIdx >= 0 ? siteName.slice(apoIdx + 1) : "";
-  const nameAfter = fullAfter.includes(" ") ? fullAfter.slice(0, fullAfter.indexOf(" ")) : fullAfter;
+  const { before: nameBefore, after: nameAfter } = getBrand(settings?.site_name);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -505,6 +516,7 @@ function Hero() {
   const [current, setCurrent] = useState(0);
   const [ready, setReady] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
+  const heroBrand = (() => { const b = getBrand(settings?.site_name); return `${b.before}'${b.after}`; })();
 
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "28%"]);
@@ -583,7 +595,7 @@ function Hero() {
               {/* Brand name — per-character stagger reveal */}
               <div className="relative">
                 <h1 className="font-display text-[clamp(4.5rem,13vw,10rem)] leading-none tracking-tight text-cream drop-shadow-[0_4px_48px_rgba(0,0,0,0.9)]">
-                  <SplitText text="Lov'Ceylon" delay={0.15} gap={0.055} duration={0.9} />
+                  <SplitText text={heroBrand} delay={0.15} gap={0.055} duration={0.9} />
                 </h1>
                 {/* Gold shimmer sweep after text settles */}
                 <motion.span
@@ -1364,183 +1376,162 @@ function Contact() {
 function Footer() {
   const { data: settings } = useSiteSettings();
   const { data: socialLinks = [] } = useQuery(socialLinksQuery());
-  const siteName = settings?.site_name ?? "Lov’Ceylon";
-  const apoIdx = siteName.indexOf("’");
-  const nameBefore = apoIdx >= 0 ? siteName.slice(0, apoIdx) : siteName;
-  const fullAfter = apoIdx >= 0 ? siteName.slice(apoIdx + 1) : "";
-  const nameAfter = fullAfter.includes(" ") ? fullAfter.slice(0, fullAfter.indexOf(" ")) : fullAfter;
+  const { before: nameBefore, after: nameAfter } = getBrand(settings?.site_name);
+  const year = new Date().getFullYear();
+  const waNumber = settings?.contact_phone?.replace(/\D/g, "") ?? "94777807619";
 
   const socialMap: Record<string, React.FC<{ className?: string }>> = {
     instagram: Instagram, facebook: Facebook, youtube: Play, whatsapp: MessageCircle,
     tiktok: Play, twitter: X, website: Link2,
   };
 
-  return (
-    <footer className="relative overflow-hidden border-t border-gold/8 bg-[var(--espresso)] py-20 md:py-28">
-      {/* Ambient radial glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_75%_60%_at_50%_0%,rgba(201,169,110,0.07),transparent)]" />
+  const exploreLinks = [["Story", "#about"], ["Gallery", "#work"], ["Packages", "#packages"], ["Services", "#services"], ["Contact", "#contact"]];
 
-      <div className="mx-auto max-w-7xl px-6">
+  const contactRows = [
+    { Icon: MapPin, text: settings?.contact_location ?? "Sri Lanka · Japan", href: undefined },
+    { Icon: MessageCircle, text: settings?.contact_email ?? "hello@lceylon.com", href: `mailto:${settings?.contact_email ?? "hello@lceylon.com"}` },
+    { Icon: Phone, text: settings?.contact_phone ?? `+${waNumber}`, href: `tel:${settings?.contact_phone ?? `+${waNumber}`}` },
+  ];
+
+  return (
+    <footer className="relative overflow-hidden border-t border-gold/10 bg-[var(--espresso)] pt-20 md:pt-28">
+      {/* Ambient glows */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_0%,rgba(201,169,110,0.08),transparent)]" />
+      <div className="pointer-events-none absolute -bottom-24 left-1/2 h-72 w-[120%] -translate-x-1/2 bg-[radial-gradient(ellipse_50%_100%_at_50%_100%,rgba(201,169,110,0.05),transparent)]" />
+
+      {/* Giant watermark brand behind everything */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center overflow-hidden">
+        <span className="select-none font-display leading-none tracking-tight text-white/[0.018] text-[clamp(7rem,22vw,20rem)] translate-y-[26%]">
+          {nameBefore}{nameAfter}
+        </span>
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-6">
+        {/* ── Top grid ── */}
         <motion.div
           variants={stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
-          className="flex flex-col items-center text-center"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid gap-12 md:grid-cols-12 md:gap-8"
         >
-          {/* ── Large animated brand ── */}
-          <motion.div variants={scaleIn} className="relative">
-            <div className="relative overflow-hidden">
-              <h2 className="font-display text-[clamp(1.8rem,4.5vw,3rem)] leading-none tracking-tight text-cream [text-shadow:0_4px_40px_rgba(0,0,0,0.55)]">
+          {/* Brand block */}
+          <motion.div variants={fadeUp} className="md:col-span-5">
+            <a href="#top" className="group inline-flex flex-col leading-none">
+              <span className="relative overflow-hidden font-display text-[clamp(2.4rem,5vw,3.6rem)] tracking-tight text-cream">
                 {nameBefore}
-                <span className="relative text-gold inline-block overflow-hidden">
+                <span className="relative inline-block overflow-hidden text-gold">
                   &#39;
-                  {/* Shimmer sweep */}
                   <motion.span
                     aria-hidden
                     animate={{ x: ["-350%", "500%"] }}
                     transition={{ duration: 2, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
-                    className="pointer-events-none absolute inset-y-0 w-6 block opacity-80"
+                    className="pointer-events-none absolute inset-y-0 w-7 block opacity-80"
                     style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.95),transparent)" }}
                   />
                 </span>
-                {nameAfter || "Ceylon"}
-              </h2>
-            </div>
-
-            {/* Animated underline */}
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.4, delay: 0.25, ease }}
-              className="mt-3 h-px origin-left bg-gradient-to-r from-gold/55 via-gold/30 to-transparent"
-            />
-
-            <p className="mt-2.5 text-[7px] uppercase tracking-[0.68em] text-gold/48">
-              Photography · Sri Lanka · Japan
+                {nameAfter}
+              </span>
+              <span className="mt-3 text-[8px] uppercase tracking-[0.55em] text-gold/55">Photography · Sri Lanka · Japan</span>
+            </a>
+            <p className="mt-6 max-w-sm text-sm leading-relaxed text-cream/45">
+              {settings?.tagline ?? "Timeless love stories, captured with cinematic art across Sri Lanka & Japan."}
             </p>
+
+            {/* WhatsApp CTA */}
+            <a
+              href={`https://wa.me/${waNumber}?text=${encodeURIComponent("Hi Lov'Ceylon! I'd like to book a session.")}`}
+              target="_blank" rel="noreferrer"
+              className="group mt-8 inline-flex items-center gap-2.5 border border-gold/35 px-6 py-3 text-[10px] uppercase tracking-[0.4em] text-gold transition-all hover:bg-gold hover:text-[var(--espresso)]"
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+              Book a Session
+              <ArrowUpRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
           </motion.div>
 
-          {/* Nav links */}
-          <motion.nav variants={stagger} className="mt-10 flex flex-wrap justify-center gap-7">
-            {[["Story", "#about"], ["Gallery", "#work"], ["Packages", "#packages"], ["Services", "#services"], ["Contact", "#contact"]].map(([l, h]) => (
-              <motion.a key={l} variants={fadeIn} href={h} className="text-[8px] uppercase tracking-[0.45em] text-cream/35 transition-colors hover:text-gold">{l}</motion.a>
-            ))}
-          </motion.nav>
-
-          {/* Social icons */}
-          {socialLinks.length > 0 && (
-            <motion.div variants={fadeUp} className="mt-8 flex gap-2.5">
-              {socialLinks.map((link) => {
-                const SIcon = socialMap[link.platform] ?? Link2;
-                return (
-                  <a key={link.id} href={link.url} target="_blank" rel="noreferrer"
-                    className="flex h-8 w-8 items-center justify-center border border-gold/12 text-cream/30 transition-all hover:border-gold/38 hover:text-gold hover:shadow-[0_0_12px_rgba(201,169,110,0.2)]">
-                    <SIcon className="h-3.5 w-3.5" />
+          {/* Explore links */}
+          <motion.div variants={fadeUp} className="md:col-span-3">
+            <p className="mb-6 text-[8px] uppercase tracking-[0.55em] text-gold/50">Explore</p>
+            <ul className="space-y-3.5">
+              {exploreLinks.map(([l, h]) => (
+                <li key={l}>
+                  <a href={h} className="group inline-flex items-center gap-2 text-[13px] text-cream/55 transition-colors hover:text-gold">
+                    <span className="h-px w-0 bg-gold transition-all duration-300 group-hover:w-4" />
+                    {l}
                   </a>
-                );
-              })}
-            </motion.div>
-          )}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
 
-          <motion.div variants={fadeUp} className="mt-10 h-px w-16 bg-gold/18" />
-          <motion.p variants={fadeIn} className="mt-5 text-[7.5px] text-cream/22">
-            {settings?.footer_text ?? `© 2026 ${siteName} Photography · All rights reserved`}
-          </motion.p>
+          {/* Contact + social */}
+          <motion.div variants={fadeUp} className="md:col-span-4">
+            <p className="mb-6 text-[8px] uppercase tracking-[0.55em] text-gold/50">Get in Touch</p>
+            <ul className="space-y-4">
+              {contactRows.map(({ Icon, text, href }) => (
+                <li key={text}>
+                  {href ? (
+                    <a href={href} className="group flex items-center gap-3 text-[13px] text-cream/55 transition-colors hover:text-gold">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-gold/15 transition-colors group-hover:border-gold/45">
+                        <Icon className="h-3.5 w-3.5 text-gold/60 transition-colors group-hover:text-gold" />
+                      </span>
+                      {text}
+                    </a>
+                  ) : (
+                    <div className="flex items-center gap-3 text-[13px] text-cream/55">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center border border-gold/15">
+                        <Icon className="h-3.5 w-3.5 text-gold/60" />
+                      </span>
+                      {text}
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            {socialLinks.length > 0 && (
+              <div className="mt-7 flex gap-2.5">
+                {socialLinks.map((link) => {
+                  const SIcon = socialMap[link.platform] ?? Link2;
+                  return (
+                    <a
+                      key={link.id} href={link.url} target="_blank" rel="noreferrer"
+                      aria-label={link.platform}
+                      className="group relative flex h-10 w-10 items-center justify-center border border-gold/15 text-cream/40 transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:text-gold hover:shadow-[0_0_22px_rgba(201,169,110,0.35)]"
+                    >
+                      <SIcon className="h-4 w-4" />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+          </motion.div>
         </motion.div>
+
+        {/* ── Animated divider ── */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.4, ease }}
+          className="mt-16 h-px origin-left bg-gradient-to-r from-transparent via-gold/30 to-transparent"
+        />
+
+        {/* ── Bottom bar ── */}
+        <div className="flex flex-col items-center justify-between gap-4 py-8 md:flex-row">
+          <p className="text-[10px] tracking-wide text-cream/30">
+            {settings?.footer_text ?? `© ${year} ${nameBefore}${nameAfter} Photography. All rights reserved.`}
+          </p>
+          <a href="#top" className="group flex items-center gap-2 text-[9px] uppercase tracking-[0.4em] text-cream/30 transition-colors hover:text-gold">
+            Back to top
+            <span className="flex h-7 w-7 items-center justify-center border border-gold/20 transition-all group-hover:border-gold/50">
+              <ArrowDown className="h-3 w-3 rotate-180 transition-transform group-hover:-translate-y-0.5" />
+            </span>
+          </a>
+        </div>
       </div>
     </footer>
-  );
-}
-
-// ─── Under Construction ───────────────────────────────────────────────────────
-function UnderConstruction({ onDismiss, siteName }: { onDismiss: () => void; siteName: string }) {
-  const apoIdx = siteName.indexOf("'");
-  const nameBefore = apoIdx >= 0 ? siteName.slice(0, apoIdx) : siteName;
-  const fullAfterUC = apoIdx >= 0 ? siteName.slice(apoIdx + 1) : "";
-  const nameAfter = fullAfterUC.includes(" ") ? fullAfterUC.slice(0, fullAfterUC.indexOf(" ")) : fullAfterUC;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
-      className="fixed inset-0 z-[400] flex flex-col items-center justify-center bg-[var(--espresso)] px-6 text-center"
-    >
-      {/* Radial glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_48%_at_50%_38%,rgba(201,169,110,0.14),transparent)]" />
-      <div className="absolute inset-0 grid-pattern opacity-10" />
-
-      {/* Corner marks */}
-      {[
-        "left-6 top-6 border-l border-t",
-        "right-6 top-6 border-r border-t",
-        "bottom-6 left-6 border-b border-l",
-        "bottom-6 right-6 border-b border-r",
-      ].map((cls, i) => (
-        <div key={i} className={`pointer-events-none absolute h-8 w-8 border-gold/40 ${cls}`} />
-      ))}
-
-      <motion.div
-        initial={{ opacity: 0, y: 28 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.9, ease }}
-        className="relative flex flex-col items-center gap-0"
-      >
-        {/* Rotating aperture with glow */}
-        <div className="relative mb-8">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-            className="flex h-16 w-16 items-center justify-center rounded-full border border-gold/25"
-          >
-            <Aperture className="h-7 w-7 text-gold" strokeWidth={0.9} />
-          </motion.div>
-          <motion.div
-            animate={{ scale: [1, 1.6, 1], opacity: [0.2, 0, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 rounded-full bg-gold/15"
-          />
-        </div>
-
-        <p className="mb-5 text-[9px] uppercase tracking-[0.65em] text-gold/60">Coming Soon</p>
-
-        <div className="relative overflow-hidden">
-          <h1 className="font-display text-[clamp(3rem,10vw,7rem)] leading-none tracking-tight text-cream [text-shadow:0_4px_36px_rgba(0,0,0,0.6)]">
-            {nameBefore}<span className="text-gold relative">&#39;
-              <motion.span
-                aria-hidden
-                animate={{ x: ["-300%", "400%"] }}
-                transition={{ duration: 1.8, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
-                className="pointer-events-none absolute inset-y-0 w-5 block opacity-75"
-                style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.95),transparent)" }}
-              />
-            </span>{nameAfter || "Ceylon"}
-          </h1>
-        </div>
-
-        <div className="my-5 h-px w-48 bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-
-        <p className="max-w-sm text-[13px] leading-relaxed text-cream/50">
-          We&#39;re putting the finishing touches on our new portfolio. Something beautiful is on its way.
-        </p>
-
-        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-          <button
-            onClick={onDismiss}
-            className="group inline-flex items-center gap-2 border border-gold/40 bg-[rgba(14,8,4,0.4)] px-8 py-3.5 text-[10px] uppercase tracking-[0.42em] text-gold backdrop-blur-sm transition-all hover:bg-gold hover:text-[var(--espresso)]"
-          >
-            Visit Site Anyway
-            <ArrowUpRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </button>
-        </div>
-
-        <p className="mt-8 text-[8px] uppercase tracking-[0.5em] text-cream/20">
-          Photography · Sri Lanka · Japan
-        </p>
-      </motion.div>
-    </motion.div>
   );
 }
 
@@ -1568,9 +1559,6 @@ function useReveal() {
 function Index() {
   const { data: settings } = useSiteSettings();
   const { progress, visible } = useLoader();
-  const [showConstruction, setShowConstruction] = useState(
-    () => sessionStorage.getItem("lc_bypass") !== "1"
-  );
   useReveal();
   useSeoMeta();
   useThemeApplicator();
@@ -1590,16 +1578,9 @@ function Index() {
     testimonials: settings?.show_testimonials ?? true,
   };
 
-  const handleDismiss = () => {
-    sessionStorage.setItem("lc_bypass", "1");
-    setShowConstruction(false);
-  };
-
   return (
     <>
-      <AnimatePresence>
-        {showConstruction && <UnderConstruction onDismiss={handleDismiss} siteName={settings?.site_name ?? "Lov'Ceylon"} />}
-      </AnimatePresence>
+      <ScrollProgress />
       <CustomCursor />
       <Loader progress={progress} visible={visible} />
       <Toaster />
