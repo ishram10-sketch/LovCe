@@ -15,13 +15,13 @@ export function useThemeApplicator() {
     const bronze   = settings.color_accent     || "#8B6B3D";
 
     // ── Two-tone backgrounds ──────────────────────────────────────────────────
-    // Darkest sections (hero, about, packages, footer) use --espresso
+    // Dark sections (hero, about, packages, footer) — user's direct color
     root.style.setProperty("--espresso", espresso);
-    // Lighter sections (work, services, contact) auto-derive ~22% lighter
-    root.style.setProperty("--background", `color-mix(in oklch, ${espresso}, white 22%)`);
-    // Cards and popovers follow the dark tone
-    root.style.setProperty("--card",    espresso);
-    root.style.setProperty("--popover", espresso);
+    // Lighter sections (work, services, contact) — admin-settable; falls back to auto-derive
+    const lightBg = settings.color_card_bg || `color-mix(in oklch, ${espresso}, white 22%)`;
+    root.style.setProperty("--background", lightBg);
+    root.style.setProperty("--card",    lightBg);
+    root.style.setProperty("--popover", lightBg);
 
     // ── Brand accent ─────────────────────────────────────────────────────────
     root.style.setProperty("--gold",    gold);

@@ -76,6 +76,7 @@ const schema = z.object({
   // Colors
   color_primary: z.string().optional(),
   color_background: z.string().optional(),
+  color_card_bg: z.string().optional(),
   color_text: z.string().optional(),
   color_accent: z.string().optional(),
   // Fonts
@@ -131,6 +132,7 @@ function AdminSettings() {
       footer_text: "",
       color_primary: "#C9A96E",
       color_background: "#0e0804",
+      color_card_bg: "#2C1F14",
       color_text: "#F5ECD7",
       color_accent: "#8B6B3D",
       font_heading: "Cormorant Garamond",
@@ -159,6 +161,7 @@ function AdminSettings() {
         contact_phone: settings.contact_phone ?? "",
         color_primary: settings.color_primary || "#C9A96E",
         color_background: settings.color_background || "#0e0804",
+        color_card_bg: settings.color_card_bg || "#2C1F14",
         color_text: settings.color_text || "#F5ECD7",
         color_accent: settings.color_accent || "#8B6B3D",
         font_heading: settings.font_heading ?? "Cormorant Garamond",
@@ -253,8 +256,15 @@ function AdminSettings() {
                 form={form}
                 name="color_background"
                 label="Dark Background Color"
-                description="Base dark tone (hero, about, packages, footer). Lighter sections auto-derive from this."
+                description="Dark sections — hero, about, packages, footer"
                 defaultColor="#0e0804"
+              />
+              <ColorField
+                form={form}
+                name="color_card_bg"
+                label="Light Section Background"
+                description="Lighter sections — Our Work, Services, Contact"
+                defaultColor="#2C1F14"
               />
               <ColorField
                 form={form}
