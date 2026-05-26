@@ -36,8 +36,11 @@ export function useThemeApplicator() {
     root.style.setProperty("--popover-foreground", cream);
 
     // ── Secondary accent (bronze) ─────────────────────────────────────────────
-    root.style.setProperty("--bronze",            bronze);
-    root.style.setProperty("--muted-foreground",  bronze);  // subtle text uses bronze
+    root.style.setProperty("--bronze", bronze);
+    // Route bronze into shadcn tokens so borders and input outlines pick it up
+    root.style.setProperty("--border", `color-mix(in oklch, ${bronze}, transparent 62%)`);
+    root.style.setProperty("--input",  `color-mix(in oklch, ${bronze}, transparent 70%)`);
+    root.style.setProperty("--muted-foreground", bronze);
 
     // ── Fonts ─────────────────────────────────────────────────────────────────
     const heading = settings.font_heading ?? "Cormorant Garamond";

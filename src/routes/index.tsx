@@ -161,8 +161,8 @@ function ScrollProgress() {
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
   return (
     <motion.div
-      style={{ scaleX }}
-      className="fixed inset-x-0 top-0 z-[120] h-[2px] origin-left bg-gradient-to-r from-gold/40 via-gold to-[#f2e0a0] shadow-[0_0_12px_rgba(201,169,110,0.6)]"
+      style={{ scaleX, background: "var(--bronze)", boxShadow: "0 0 14px var(--bronze)" }}
+      className="fixed inset-x-0 top-0 z-[120] h-[2px] origin-left"
       aria-hidden
     />
   );
@@ -760,7 +760,7 @@ function Philosophy() {
           viewport={{ once: true, margin: "-80px" }}
           className="mb-20 max-w-4xl"
         >
-          <motion.p variants={fadeUp} className="mb-5 text-[9px] uppercase tracking-[0.58em] text-gold/55">Our Philosophy</motion.p>
+          <motion.p variants={fadeUp} className="mb-5 text-[9px] uppercase tracking-[0.58em] text-[var(--bronze)]">Our Philosophy</motion.p>
           <motion.h2 variants={fadeUp} className="font-display text-4xl leading-[1.12] text-cream md:text-5xl lg:text-6xl">
             {settings?.tagline ?? "We believe every love story deserves to be told with art — not just photographs, but frames that breathe, carry feeling, and endure time."}
           </motion.h2>
@@ -819,7 +819,7 @@ function Work() {
           className="mb-14 flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
         >
           <div>
-            <motion.p variants={fadeUp} className="mb-2 text-[9px] uppercase tracking-[0.58em] text-gold/55">Portfolio</motion.p>
+            <motion.p variants={fadeUp} className="mb-2 text-[9px] uppercase tracking-[0.58em] text-[var(--bronze)]">Portfolio</motion.p>
             <motion.h2 variants={fadeUp} className="font-display text-4xl text-cream md:text-5xl">Our Work</motion.h2>
           </div>
           <motion.div variants={fadeUp} className="flex flex-wrap gap-2">
@@ -923,7 +923,7 @@ function About() {
             viewport={{ once: true, margin: "-80px" }}
             className="flex flex-col justify-center"
           >
-            <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-gold/55">Our Story</motion.p>
+            <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-[var(--bronze)]">Our Story</motion.p>
             <motion.h2 variants={fadeUp} className="font-display text-4xl leading-[1.08] text-cream md:text-5xl">
               {settings?.photographer_name ?? "Lov’Ceylon Photography"}
             </motion.h2>
@@ -978,7 +978,7 @@ function Services() {
           viewport={{ once: true, margin: "-60px" }}
           className="mb-16 text-center"
         >
-          <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-gold/55">What We Offer</motion.p>
+          <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-[var(--bronze)]">What We Offer</motion.p>
           <motion.h2 variants={fadeUp} className="font-display text-4xl text-cream md:text-5xl">Services</motion.h2>
         </motion.div>
 
@@ -987,7 +987,7 @@ function Services() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-40px" }}
-          className="grid gap-px bg-gold/10 md:grid-cols-3"
+          className="grid gap-px bg-[var(--bronze)]/10 md:grid-cols-3"
         >
           {services.map((s) => {
             const Icon = ICON_MAP[s.icon_name] ?? Camera;
@@ -1005,8 +1005,8 @@ function Services() {
                 </div>
                 <h3 className="mb-4 font-display text-2xl text-cream">{s.name}</h3>
                 <p className="flex-1 text-sm leading-relaxed text-cream/50">{s.description}</p>
-                <div className="mt-8 h-px w-0 bg-gold/35 transition-all duration-500 group-hover:w-full" />
-                {s.detail && <p className="mt-3 text-[8px] uppercase tracking-[0.42em] text-gold/45">{s.detail}</p>}
+                <div className="mt-8 h-px w-0 bg-[var(--bronze)] transition-all duration-500 group-hover:w-full" />
+                {s.detail && <p className="mt-3 text-[8px] uppercase tracking-[0.42em] text-[var(--bronze)]/70">{s.detail}</p>}
               </motion.div>
             );
           })}
@@ -1032,7 +1032,7 @@ function Process() {
           viewport={{ once: true, margin: "-60px" }}
           className="mb-16"
         >
-          <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-gold/55">How It Works</motion.p>
+          <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-[var(--bronze)]">How It Works</motion.p>
           <motion.h2 variants={fadeUp} className="font-display text-4xl text-cream md:text-5xl">Our Process</motion.h2>
         </motion.div>
 
@@ -1187,7 +1187,7 @@ function Packages() {
           viewport={{ once: true, margin: "-60px" }}
           className="mb-14 text-center"
         >
-          <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-gold/55">
+          <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-[var(--bronze)]">
             Investment
           </motion.p>
           <motion.h2 variants={fadeUp} className="font-display text-4xl text-cream md:text-5xl">
@@ -1272,7 +1272,7 @@ function Testimonials() {
           viewport={{ once: true, margin: "-60px" }}
           className="mb-14"
         >
-          <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-gold/55">Client Love</motion.p>
+          <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-[var(--bronze)]">Client Love</motion.p>
           <motion.h2 variants={fadeUp} className="font-display text-4xl text-cream md:text-5xl">Testimonials</motion.h2>
         </motion.div>
 
@@ -1387,11 +1387,11 @@ function Contact() {
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
           >
-            <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-gold/55">Get in Touch</motion.p>
+            <motion.p variants={fadeUp} className="mb-3 text-[9px] uppercase tracking-[0.58em] text-[var(--bronze)]">Get in Touch</motion.p>
             <motion.h2 variants={fadeUp} className="font-display text-4xl leading-[1.08] text-cream md:text-5xl">
               Let&#39;s Tell Your<br />Story Together
             </motion.h2>
-            <motion.div variants={fadeUp} className="my-6 h-px w-14 bg-gold/35" />
+            <motion.div variants={fadeUp} className="my-6 h-px w-14 bg-[var(--bronze)]" />
             <motion.p variants={fadeUp} className="text-sm leading-relaxed text-cream/55">
               Ready to begin? We&#39;d love to hear about your day. Reach out via the form or connect directly — we typically respond within 24 hours.
             </motion.p>
